@@ -1,0 +1,50 @@
+version: '3.8'
+
+# Docker Compose simplificado para uso básico dos bots
+# Para usar: docker-compose -f docker-compose.simple.yml up
+
+services:
+  # Bot de Sinais
+  signal-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: crypto-signal-bot
+    restart: unless-stopped
+    command: ["python", "bots/signal_bot_runner.py"]
+    environment:
+      - BOT_TYPE=signal
+      - LOG_LEVEL=INFO
+    env_file:
+      - .env
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+    networks:
+      - crypto-network
+
+  # Bot de Trading (modo simulação)
+  trading-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: crypto-trading-bot
+    restart: unless-stopped
+    command: ["python", "bots/trading_bot_runner.py", "--dry-run"]
+    environment:
+      - BOT_TYPE=trading
+      - LOG_LEVEL=INFO
+    env_file:
+      - .env
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+    networks:
+      - crypto-network
+    depends_on:
+      - signal-bot
+
+networks:
+  crypto-network:
+    driver: bridge
+
