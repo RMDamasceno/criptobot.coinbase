@@ -12,13 +12,15 @@ LABEL version="1.0.0"
 WORKDIR /app
 
 # Instalar dependências do sistema
-RUN apk add --no-cache \
+RUN  apk add --no-cache \
     gcc \
     musl-dev \
     linux-headers \
     libffi-dev \
     openssl-dev \
     curl \
+    sqlite \
+    sqlite-dev \
     tzdata
 
 # Definir timezone

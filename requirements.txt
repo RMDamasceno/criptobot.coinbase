@@ -24,7 +24,7 @@ prometheus-client>=0.17.0
 # Database and Storage
 sqlalchemy>=2.0.0
 redis>=4.5.0
-sqlite3
+# sqlite3
 
 # Testing
 pytest>=7.4.0
