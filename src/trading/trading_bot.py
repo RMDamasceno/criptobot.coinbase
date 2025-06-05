@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 from dataclasses import dataclass
 
 from ..config.settings import get_settings
-from ..config.logging_config import get_logger, log_trade_executed, log_performance_metrics
+from ..config.logging_config import get_logger, log_trade_execution, log_performance_metrics
 from ..core.coinbase_client import CoinbaseClient
 from ..core.exceptions import CryptoBotsException, TradingException
 from ..signals.signal_bot import SignalBot
@@ -432,7 +432,7 @@ class TradingBot:
                 self.strategies[strategy_name].add_position(position)
             
             # Log da execução
-            log_trade_executed(
+            log_trade_execution(
                 logger,
                 symbol=order.symbol,
                 side=order.side.value,

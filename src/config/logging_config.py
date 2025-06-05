@@ -164,7 +164,7 @@ def get_logger(name: str) -> structlog.stdlib.BoundLogger:
     return structlog.get_logger(name)
 
 
-def log_trade_execution(
+def log_trade_execution(  # ← Nome correto da função
     logger: structlog.stdlib.BoundLogger,
     action: str,
     symbol: str,
