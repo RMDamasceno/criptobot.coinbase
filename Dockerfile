@@ -41,7 +41,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copiar código fonte
 COPY src/ ./src/
 COPY bots/ ./bots/
-COPY .env .env
+COPY .env.example .env
 
 # Criar diretórios necessários
 RUN mkdir -p logs data config && \
