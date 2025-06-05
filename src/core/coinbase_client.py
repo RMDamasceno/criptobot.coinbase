@@ -254,29 +254,53 @@ class CoinbaseClient:
     ) -> List[Dict[str, Any]]:
         """
         Retorna dados de candlestick para um produto.
-        
-        Args:
-            product_id: ID do produto
-            start: Data de início
-            end: Data de fim
-            granularity: Granularidade (ONE_MINUTE, FIVE_MINUTE, etc.)
-            
-        Returns:
-            Lista de candles
+
+        CORREÇÃO: Valida limite de 350 candles da API Coinbase.
         """
+        from datetime import timedelta
+
+        # Mapeamento de granularidade para segundos
+        granularity_seconds = {
+            "ONE_MINUTE": 60,
+            "FIVE_MINUTE": 300,
+            "FIFTEEN_MINUTE": 900,
+            "ONE_HOUR": 3600,
+            "SIX_HOUR": 21600,
+            "ONE_DAY": 86400
+        }
+
         params = {"granularity": granularity}
-        
-        if start:
+
+        # CORREÇÃO: Validar limite de 350 candles
+        if start and end:
+            # Calcular número de candles que seriam retornados
+            time_diff = (end - start).total_seconds()
+            interval_seconds = granularity_seconds.get(granularity, 60)
+            estimated_candles = int(time_diff / interval_seconds)
+
+            # Se exceder 350, ajustar o período
+            if estimated_candles > 350:
+                logger.warning(
+                    f"Período solicitado resultaria em {estimated_candles} candles. "
+                    f"Limitando a 350 candles para evitar erro da API."
+                )
+                # Ajustar end para não exceder 350 candles
+                max_seconds = 350 * interval_seconds
+                end = start + timedelta(seconds=max_seconds)
+
             params["start"] = int(start.timestamp())
-        if end:
             params["end"] = int(end.timestamp())
-        
+        elif start:
+            params["start"] = int(start.timestamp())
+        elif end:
+            params["end"] = int(end.timestamp())
+
         response = self._make_request(
             'GET',
             f'/api/v3/brokerage/products/{product_id}/candles',
             params=params
         )
-        
+    
         return response.candles if hasattr(response, 'candles') else []
     
     def get_market_trades(self, product_id: str, limit: int = 100) -> List[Dict[str, Any]]:
