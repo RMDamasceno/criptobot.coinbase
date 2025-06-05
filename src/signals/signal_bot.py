@@ -185,7 +185,8 @@ class SignalBot:
                 end=end_time,
                 granularity="ONE_MINUTE"
             )
-            
+            logger.debug(candles)
+            # Verificar se há candles suficientes
             if not candles or len(candles) < 100:
                 logger.warning(f"Insufficient data for {symbol}", candles_count=len(candles) if candles else 0)
                 return None

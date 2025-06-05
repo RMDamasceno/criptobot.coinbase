@@ -300,8 +300,12 @@ class CoinbaseClient:
             f'/api/v3/brokerage/products/{product_id}/candles',
             params=params
         )
-    
-        return response.candles if hasattr(response, 'candles') else []
+        try:
+            response = response['candles']
+        except KeyError:
+            logger.error("Erro ao obter candles: resposta inválida da API", response=response)
+            return []
+        return response 
     
     def get_market_trades(self, product_id: str, limit: int = 100) -> List[Dict[str, Any]]:
         """
