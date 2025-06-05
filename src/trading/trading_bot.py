@@ -192,7 +192,8 @@ class TradingBot:
         for symbol in self.trading_pairs:
             try:
                 # Obter ticker atual
-                ticker = self.coinbase_client.get_product_ticker(symbol)
+                ticker = self.coinbase_client.get_market_trades(symbol)
+                # ticker = self.coinbase_client.get_product_ticker(symbol)
                 
                 if ticker:
                     self.market_data_cache[symbol] = {

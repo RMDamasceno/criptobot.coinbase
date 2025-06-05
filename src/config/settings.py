@@ -47,6 +47,7 @@ class Settings(BaseSettings):
     coinbase_api_secret: str = Field(..., env="COINBASE_API_SECRET")
     coinbase_environment: Environment = Field(Environment.SANDBOX, env="COINBASE_ENVIRONMENT")
     coinbase_timeout: int = Field(30, env="COINBASE_TIMEOUT")
+    initial_balance: float = Field(0.0, env="INITIAL_BALANCE")
     
     @property
     def coinbase_base_url(self) -> str:
